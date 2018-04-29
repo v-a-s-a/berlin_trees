@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Display a map</title>
+    <title>Berlin Trees 2016</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
@@ -15,20 +15,46 @@
 <body>
 <div id='map'></div>
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoidnRydWJldHMiLCJhIjoiY2pnNWNjNXA0MjZtdDJ4cDk2cGczNWF6OSJ9.iQ4s5IslIgfs9lhmqvZU_w';
-var map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/vtrubets/cjgl5mkwq00662spjd8zku206',
-    center: [13.407455, 52.506955], 
-    zoom: 11
-    });
+    mapboxgl.accessToken = 'pk.eyJ1IjoidnRydWJldHMiLCJhIjoiY2pnNWNjNXA0MjZtdDJ4cDk2cGczNWF6OSJ9.iQ4s5IslIgfs9lhmqvZU_w';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/vtrubets/cjgl5mkwq00662spjd8zku206',
+        center: [13.407455, 52.506955], 
+        zoom: 13
+        });
 
-// Add geolocate control to the map.
-map.addControl(new mapboxgl.GeolocateControl({
-    positionOptions: {
-        enableHighAccuracy: true
-    }
-}));
+    // Add geolocate control to the map.
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        }
+    }));
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+    // location of the feature, with description HTML from its properties.
+    map.on('click', 'baumbestand-anlagen-18-04-18', function (e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var Gattung = e.features[0].properties.Gattung;
+        var BaumHoehe = e.features[0].properties.BaumHoehe;
+        var Standalter = e.features[0].properties.Standalter;
+
+        var popup_text = `Genus: ${Gattung}
+Age:${Standalter}
+Height:${BaumHoehe}`;
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setText(popup_text)
+            .addTo(map);
+    });
+    
 
 </script>
 
