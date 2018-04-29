@@ -30,9 +30,7 @@
         }
     }));
 
-    // When a click event occurs on a feature in the places layer, open a popup at the
-    // location of the feature, with description HTML from its properties.
-    map.on('click', 'baumbestand-anlagen-18-04-18', function (e) {
+    click_listener <- function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var Gattung = e.features[0].properties.Gattung;
         var BaumHoehe = e.features[0].properties.BaumHoehe;
@@ -53,7 +51,12 @@ Height:${BaumHoehe}`;
             .setLngLat(coordinates)
             .setText(popup_text)
             .addTo(map);
-    });
+    }
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+    // location of the feature, with description HTML from its properties.
+    map.on('click', 'baumbestand-anlagen-18-04-18', click_listener);
+    map.on('click', 'baumbestand-strassen-18-04-18', click_listener);    
     
 
 </script>
