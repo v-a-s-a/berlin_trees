@@ -30,7 +30,7 @@
         }
     }));
 
-    click_listener <- function (e) {
+    click_listener = function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var Gattung = e.features[0].properties.Gattung;
         var BaumHoehe = e.features[0].properties.BaumHoehe;
